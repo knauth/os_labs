@@ -12,4 +12,8 @@ The I/O queue holds processes which need to wait for an external I/O operation. 
 
 ## Memory Manager
 
-The memory manager simulates 
+The memory manager simulates a kernel's memory allocation and algorithm. The code is set up to simulate adressing 4MiB of memory with 4KiB pages organized into blocks of exponentially increasing size. The memory manager uses a Next Fit allocation scheme, meaning that the manager keeps track of the most recently allocated block. When a process requests memory be allocated to it, the manager searches the blocks round-robin beginning at the most recently allocated block. This helps reduce the search time for each allocation with the trade-off that the allocated block might not be the smallest possible size. Blocks are represented by a circular linked list to facilitate the Next Fit scheme.
+
+There is a swap mechanism which moves older blocks to the swap space (which would be the disk in a real implementation). Blocks are swapped based on their position in a FIFO queue.Swapping begins after 80% of the blocks have been allocated. Note that's 80% of blocks, not 80% of pages; blocks are a more useful metric here because we're likely to run out of large blocks before we run out of memory.
+
+There's also some basic tester code in the same file.
